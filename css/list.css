@@ -1,0 +1,50 @@
+#menu{
+    height: 80px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#menu_box{
+    display: flex;
+}
+
+#search{
+    margin: 10px;
+}
+
+#popular_movies{
+    display: flex;
+}
+
+#video_container{
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin: 0 50px;
+    flex-wrap: wrap;
+}
+
+
+.card{
+    margin: 10px;
+}
+
+#title{
+    font-size: 30px;
+    margin-left: 10px;
+}
+
+#popular_label, #filter_label{
+    font-size: 20px;
+    margin: 10px;
+}
+
+.btn-group{
+    margin: 5px;
+}
+
+#to_home{
+    text-align: center;
+    padding: 5px;
+}

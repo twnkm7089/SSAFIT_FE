@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>운동영상 리뷰</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 10px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #333;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        button.cancel {
+            background-color: #999;
+        }
+        .main-button {
+            display: inline-block;
+            padding: 8px 15px;
+            background-color: #333;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            text-decoration: none;
+            margin-top: 10px;
+            font-size:14px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>[운동영상]</h1>
+        <a href="index.html" class="main-button">메인으로</a>
+    </header>
+    <div class="container">
+        <button id="showPopup">리뷰 등록</button>
+        <div class="popup" id="reviewPopup">
+            <h2>리뷰 등록</h2>
+            <form id="reviewForm">
+                <label for="title">제목</label>
+                <input type="text" id="title" name="title" required>
+
+                <label for="content">내용</label>
+                <textarea id="content" name="content" rows="4" required></textarea>
+
+                <button type="submit">등록</button>
+                <button type="button" class="cancel">취소</button>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+                <a href="index.html" buttton type="submit" class="main-button">목록</a>
+            </form>
+        </div>
+        <div class="overlay" id="overlay"></div>
+    </div>
+    <div class="container">
+        <h2>리뷰 목록</h2>
+        <ul id="reviewList"></ul>
+    </div>
+    
+    <script>
+document.addEventListener("DOMContentLoaded", function() {
+    const showPopupButton = document.getElementById('showPopup');
+    const reviewPopup = document.getElementById('reviewPopup');
+    const overlay = document.getElementById('overlay');
+    const reviewForm = document.getElementById('reviewForm');
+    const reviewList = document.getElementById('reviewList');
+    const cancelButton = reviewForm.querySelector('.cancel');
+    const reviews = [];
+    let currentEditIndex = null; // 현재 수정 중인 리뷰의 인덱스
+
+    function openPopup() {
+        reviewPopup.style.display = 'block';
+        overlay.style.display = 'block';
+    }
+
+    function closePopup() {
+        reviewPopup.style.display = 'none';
+        overlay.style.display = 'none';
+        reviewForm.reset();
+    }
+
+    reviewForm.addEventListener('submit', function(event) {
+        event.preventDefault();
+        const title = document.getElementById('title').value;
+        const content = document.getElementById('content').value;
+
+        if (currentEditIndex  !== null) {
+            // 수정 모드
+            reviews[currentEditIndex] = { title, content };
+            const updatedReview = reviewList.children[currentEditIndex];
+            updatedReview.innerHTML = `<strong>${title}</strong>: ${content} <button class="edit" data-index="${currentEditIndex}">수정</button>`;
+            currentEditIndex = null;
+        } else {
+            // 새 리뷰 추가
+            const newReview = { title, content };
+            reviews.push(newReview);
+            renderReview(newReview, reviews.length - 1);
+        }
+        closePopup();
+        alert('리뷰가 저장되었습니다!');
+    });
+
+    function renderReview(review, index) {
+        const li = document.createElement('li');
+        li.innerHTML = `<strong>${review.title}</strong>: ${review.content} <button class="edit" data-index="${index}">수정</button>`;
+        reviewList.appendChild(li);
+    }
+
+    reviewList.addEventListener('click', function(event) {
+        if (event.target.classList.contains('edit')) {
+            const index = parseInt(event.target.getAttribute('data-index'));
+            const review = reviews[index];
+            document.getElementById('title').value = review.title;
+            document.getElementById('content').value = review.content;
+            currentEditIndex = index;
+            openPopup();
+        }
+    });
+
+    cancelButton.addEventListener('click', function() {
+        closePopup();
+    });
+
+    showPopupButton.addEventListener('click', function() {
+        openPopup();
+    });
+});
+
+    </script>
+</body>
+</html>
